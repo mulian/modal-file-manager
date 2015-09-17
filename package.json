@@ -2,11 +2,15 @@
   "name": "modal-file-manager",
   "main": "./lib/modal-file-manager",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "A file browser as modal Panel.",
   "keywords": [
+    "file",
+    "dir",
+    "browser",
+    "modal"
   ],
   "activationCommands": {
-    "atom-workspace": "modal-file-manager:toggle"
+    "atom-workspace": "modal-file-manager:show"
   },
   "repository": "https://github.com/atom/modal-file-manager",
   "license": "MIT",
@@ -14,5 +18,6 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
+    "atom-space-pen-views": "2.1.0"
   }
 }
