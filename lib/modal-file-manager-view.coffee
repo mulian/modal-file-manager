@@ -5,7 +5,9 @@ module.exports =
 class ModalFileManagerView extends SelectListView
   #constructor: (serializedState) ->
   callback: undefined
-  showHidden=false
+  showHidden:false
+  selectNoDir:false
+  showAllSubDir: true
 
   initialize: (@attr) ->
     super
@@ -16,9 +18,13 @@ class ModalFileManagerView extends SelectListView
     @initKeyFunctions()
 
   initTitle: ->
-    @subtitle = $("<h2 />",{text: 'none',id:'modal-file-manager-subtitle'})
+    @sub = $("<h2 />",{id:'modal-file-manager-subtitle'})
+    @subtitle = $("<h2 />",{text: 'none'})
+    @subBefore = $("<div class='pull-right'><kbd class='key-binding'>←</kbd></div>")
     @title = $('<h1 />',{text: 'File Manager: ',id:'modal-file-manager-title'})
-    @baseElement.prepend @subtitle
+    @sub.append @subBefore
+    @sub.append @subtitle
+    @baseElement.prepend @sub
     @baseElement.prepend @title
 
   initKeyFunctions: ->
@@ -33,12 +39,18 @@ class ModalFileManagerView extends SelectListView
   getFilterKey: () ->
     "title"
   viewForItem: (item) -> #class: status-ignored if . icon-file-text
+    iconClass = ""
+    bindArrow = ""
+    if item.entrie.isDirectory()
+      iconClass = "icon-file-directory"
+      bindArrow = "<div class='pull-right'><kbd class='key-binding'>→</kbd></div>"
+    else
+      iconClass = "icon icon-file-text"
     "<li class='modal-file-manager-item directory'>
-      <span class='#{
-        if item.entrie.isDirectory() then 'icon-file-directory' else 'icon icon-file-text'}
+      <span class='#{iconClass}
          modal-file-manager-item-title'>
         #{item.title}
-      </span>
+      </span> #{bindArrow}
     </li>"
 
   open: (@currentDir,callback) ->
@@ -49,6 +61,7 @@ class ModalFileManagerView extends SelectListView
         @subtitle.text @currentDir.getPath()
         items = []
         for entrie in entries
+          #if @showAllSubDir and entrie.isDirectory() #TODO: inklude all sub dir
           if @showHidden or not (entrie.getBaseName().charAt(0)=='.')
             items.push
               'title': entrie.getBaseName()
@@ -61,22 +74,28 @@ class ModalFileManagerView extends SelectListView
         @focusFilterEditor()
       else atom.notifications.addInfo "#{@currentDir.getBaseName()}: Permission denied"
 
+  reOpen: ->
+    @open @currentDir
+
   rightArrow: (item) ->
-    @open item.entrie, @showHidden
+    @open item.entrie
   leftArrow: (item) ->
-    @open @currentDir.getParent(), @showHidden
+    @open @currentDir.getParent()
   confirmed: (item) ->
-    if @callback?
-      @callback item.entrie.getRealPathSync()
+    if @selectNoDir and item.entrie.isDirectory()
+      @panel.show()
     else
-      atom.notifications.addInfo "no callback to open #{item.entrie.getRealPathSync()}"
-    @panel.hide()
+      if @callback?
+        @callback item.entrie
+      else
+        atom.notifications.addInfo "no callback to open #{item.entrie.getRealPathSync()}"
+      @panel.hide()
 
   setFilterQuery: (str) ->
     @filterEditorView.model.setText str
 
   cancelled: ->
-    console.log("This view was cancelled")
+    #console.log("This view was cancelled")
     @panel.hide()
 
   # Returns an object that can be retrieved when package is activated
