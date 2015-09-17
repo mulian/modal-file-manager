@@ -15,7 +15,11 @@ module.exports = ModalFileManager =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:show': => @modalFileManagerView.show()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:show': => @test()
+
+  test: ->
+    @modalFileManagerView.open '/', (path)->
+      console.log "path: #{path}"
 
   deactivate: ->
     @modalPanel.destroy()
