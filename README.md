@@ -2,7 +2,7 @@
 
 A file browser in modal Panel.
 
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+![A screenshot of your package](https://raw.githubusercontent.com/mulian/modal-file-manager/master/preview.png)
 
 ## Install & Open
 1. Install
