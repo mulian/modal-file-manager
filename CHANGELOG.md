@@ -1,3 +1,6 @@
+## 0.1.1 - Lib Update
+* Update to use as Lib
+
 ## 0.1.0 - First Release
 * Show modal File Manager
 * Use arrow keys to Navigate

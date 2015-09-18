@@ -1,16 +1,18 @@
-ModalFileManagerView = require './modal-file-manager-view'
+#ModalFileManagerView =
 {CompositeDisposable} = require 'atom'
 {BufferedProcess} = require 'atom'
 
 module.exports = ModalFileManager =
-  ModalFileManagerView: ModalFileManagerView
+  #to get View by using as lib
+  ModalFileManagerView: require './modal-file-manager-view'
+
   modalFileManagerView: null
   modalPanel: null
   subscriptions: null
   isAlreadyOpen: false
 
   activate: (state) ->
-    @modalFileManagerView = new ModalFileManagerView()
+    @modalFileManagerView = new @ModalFileManagerView()
     @modalFileManagerView.setSate state.modalFileManagerViewState
     #@modalPanel = atom.workspace.addModalPanel(item: @modalFileManagerView, visible: false)
 
