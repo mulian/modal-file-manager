@@ -6,8 +6,13 @@ class ModalFileManagerView extends SelectListView
   #constructor: (serializedState) ->
   callback: undefined
   showHidden:false
-  selectNoDir:false
-  showAllSubDir: true
+  #selectNoDir:false
+  showAllSubDir: true #not working right now
+
+  comfirmFilter:
+    #dir,file could be an regular Expression only files how pass will comfirmed
+    dir: true
+    file: true
 
   initialize: (@attr) ->
     super
@@ -81,15 +86,20 @@ class ModalFileManagerView extends SelectListView
     @open item.entrie
   leftArrow: (item) ->
     @open @currentDir.getParent()
-  confirmed: (item) ->
-    if @selectNoDir and item.entrie.isDirectory()
-      @panel.show()
+  confirmed: (item) =>
+    if item.entrie.isDirectory()
+      if @comfirmFilter.dir instanceof RegExp
+        @callBackNow item.entrie if @comfirmFilter.dir.test item.entrie.getBaseName()
+      else if @comfirmFilter.dir
+        @callBackNow item.entrie
     else
-      if @callback?
-        @callback item.entrie
-      else
-        atom.notifications.addInfo "no callback to open #{item.entrie.getRealPathSync()}"
-      @panel.hide()
+      if @comfirmFilter.file instanceof RegExp
+        @callBackNow item.entrie if @comfirmFilter.file.test item.entrie.getBaseName()
+      else if @comfirmFilter.file
+        @callBackNow item.entrie
+  callBackNow: (item) ->
+    @callback item
+    @panel.hide()
 
   setFilterQuery: (str) ->
     @filterEditorView.model.setText str

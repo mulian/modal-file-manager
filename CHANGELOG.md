@@ -1,3 +1,6 @@
+## 0.1.2 - add
+* Add Comfirmation Filter
+
 ## 0.1.1 - Lib Update
 * Update to use as Lib
 

@@ -25,7 +25,7 @@ You could use this File Manager as lib for Packages like
     console.log path
 ```
 
-### Steps
+### Use Steps
 1. add following to your package.json in dependencies:
 ```javascript
     "modal-file-manager": "git+https://github.com/mulian/modal-file-manager.git"
@@ -34,7 +34,26 @@ You could use this File Manager as lib for Packages like
 3. Use the ModalFileManagerView:
 ```javascript
 {ModalFileManagerView} = require 'modal-file-manager'
-modalFileManager = new ModalFileManager()
-modalFileManager.open "/", (file) ->
+modalFileManagerView = new ModalFileManagerView()
+modalFileManagerView.open "/", (file) ->
   console.log "selected file-/folder name: #{file.getBaseName()}"
 ```
+
+### Comfirmation Filter
+* modalFileManagerView.comfirmFilter.dir is for Directory
+* modalFileManagerView.comfirmFilter.file is for File
+same usage
+
+#### No confirmation on Directory, but file
+```javascript
+@modalFileManagerView.comfirmFilter.dir = false
+@modalFileManagerView.comfirmFilter.file = true
+```
+
+#### Regular Expression
+for example:
+```javascript
+@modalFileManagerView.comfirmFilter.dir = /.app$/
+```
+Restrict the comfirmation to open only Folder with Foldername.app (usefull for mac os apps)
+(same with .file)

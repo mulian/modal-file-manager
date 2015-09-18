@@ -24,6 +24,7 @@ module.exports = ModalFileManager =
 
   runFileManager: ->
     if not @isAlreadyOpen
+      #@modalFileManagerView.comfirmFilter.dir = /.app$/
       @modalFileManagerView.open atom.project.getPaths()[0], (file) => #current Project dir is?
         console.log "path: #{file.getBaseName()}"
         if process.platform == "darwin" #mac
