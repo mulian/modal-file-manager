@@ -12,7 +12,7 @@
   "activationCommands": {
     "atom-workspace": "modal-file-manager:show"
   },
-  "repository": "https://github.com/atom/modal-file-manager",
+  "repository": "https://github.com/mulian/modal-file-manager.git",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"

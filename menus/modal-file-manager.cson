@@ -10,7 +10,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'modal-file-manager'
+      'label': 'Modal File Manager'
       'submenu': [
         {
           'label': 'Show'
