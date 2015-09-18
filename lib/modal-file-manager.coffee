@@ -3,6 +3,7 @@ ModalFileManagerView = require './modal-file-manager-view'
 {BufferedProcess} = require 'atom'
 
 module.exports = ModalFileManager =
+  ModalFileManagerView: ModalFileManagerView
   modalFileManagerView: null
   modalPanel: null
   subscriptions: null
