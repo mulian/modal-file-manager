@@ -20,3 +20,15 @@ A file browser in modal Panel.
 
 ## As lib
 You could use this File Manager as lib for Packages like `atom.pickDirectory (path) ->`.
+
+### Steps
+1. add following to your package.json in dependencies:
+    `"modal-file-manager": "git+https://github.com/mulian/modal-file-manager.git"`
+2. in your Project root: `npm update`
+3. Use the ModalFileManagerView:
+```javascript
+{ModalFileManagerView} = require 'modal-file-manager'
+modalFileManager = new ModalFileManager()
+modalFileManager.open "/", (file) ->
+  console.log "selected file-/folder name: #{file.getBaseName()}"
+```
