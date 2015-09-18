@@ -19,11 +19,17 @@ A file browser in modal Panel.
  * type character to search the current folder
 
 ## As lib
-You could use this File Manager as lib for Packages like `atom.pickDirectory (path) ->`.
+You could use this File Manager as lib for Packages like
+```javascript
+  atom.pickDirectory (path) ->
+    console.log path
+```
 
 ### Steps
 1. add following to your package.json in dependencies:
-    `"modal-file-manager": "git+https://github.com/mulian/modal-file-manager.git"`
+```javascript
+    "modal-file-manager": "git+https://github.com/mulian/modal-file-manager.git"
+```
 2. in your Project root: `npm update`
 3. Use the ModalFileManagerView:
 ```javascript
