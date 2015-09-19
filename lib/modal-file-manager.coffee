@@ -50,7 +50,7 @@ module.exports = ModalFileManager =
         dir = atom.config.get("#{packageName}.defaultOpenPath")
       @modalFileManagerView.comfirmFilter.dir = atom.config.get("#{packageName}.openDirectory")
       @modalFileManagerView.open dir, (file) => #current Project dir is?
-        console.log "path: #{file.getBaseName()}"
+        #console.log "path: #{file.getBaseName()}"
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
           @run "open #{file.getRealPathSync()}"
         else

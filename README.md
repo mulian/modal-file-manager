@@ -15,7 +15,6 @@ A file browser in modal Panel.
 ## Navigate
  * arrow key ← to show parent directory
  * arrow key → to show sub directory from selected directory
- * press enter to start the file (works only on mac right now)
  * type character to search the current folder
  * comfirm = press enter
 
@@ -28,11 +27,11 @@ A file browser in modal Panel.
   * (the path will only reset on comfirm a file/dir in Modal File Manager not on show/hide)
 * Open With
   * atom: will open every comfirmed (enter) file/folder with atom
-  * open: will open with terminal statemenet `open <pathToFileOrDir>`
+  * open: will open with terminal statement `open <pathToFileOrDir>`
 * Open Directory
   * if you also want to comfirm Directory
 
-## As lib
+## Use the Modal File Manager as lib
 You could use this File Manager as lib for Packages like
 ```javascript
   atom.pickDirectory (path) ->
@@ -60,8 +59,9 @@ same usage
 
 #### No confirmation on Directory, but file
 ```javascript
-@modalFileManagerView.comfirmFilter.dir = false
-@modalFileManagerView.comfirmFilter.file = true
+@modalFileManagerView.comfirmFilter
+  dir = false
+  file = true
 ```
 
 #### Regular Expression
@@ -69,5 +69,8 @@ for example:
 ```javascript
 @modalFileManagerView.comfirmFilter.dir = /.app$/
 ```
-Restrict the comfirmation to open only Folder with Foldername.app (usefull for mac os apps)
+Restrict the comfirmation to comfirm only Folder with Foldername.app (usefull for mac os apps)
 (same with .file)
+
+#### Other
+Please let me know, if you use this Project as lib.
