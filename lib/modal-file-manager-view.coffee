@@ -68,22 +68,27 @@ class ModalFileManagerView extends SelectListView
 
   currentPath: null
 
+  #open Directory and show file Manager
   open: (@currentDir,callback) ->
     @callback=callback if callback?
     @currentDir = new Directory @currentDir if @currentDir not instanceof Directory #==string
-    @currentPath = @currentDir.getRealPathSync()
-    @collectItems @currentDir, @deep, true
 
-    @subtitle.text @currentDir.getRealPathSync()
-    @setFilterQuery ""
+    @collectItems @currentDir, true
+
     if not @panel.isVisible()
       @panel.show()
     @focusFilterEditor()
 
   #async collectItems
   #it updates the items on every async callback
-  collectItems: (dir,deep,start=false) ->
-    @items = [] if start
+  collectItems: (dir,start=false,deep=@deep) ->
+    if start
+      @items = []
+      @currentDir = dir
+      @currentPath = @currentDir.getRealPathSync()
+      #Set suptitle text to current Path Url and reset Filter Query
+      @subtitle.text @currentPath
+      @setFilterQuery ""
     dir.getEntries (error,entries) =>
       atom.notification.addError "error on collectItems" if error
       if entries?
@@ -91,7 +96,7 @@ class ModalFileManagerView extends SelectListView
         for entrie in entries
           #show/hide hidden files AND on start show directory, if not start then no directorys
           if (@showHidden or not (entrie.getBaseName().charAt(0)=='.'))
-            @collectItems entrie, (parseInt(deep)-1) if parseInt(deep)>0 and entrie.isDirectory()
+            @collectItems entrie,false, (parseInt(deep)-1) if parseInt(deep)>0 and entrie.isDirectory()
             if start or not entrie.isDirectory()
               #console.log dir.getRealPath().substring @currentPath.length,entrie.relativize().length
               item =
@@ -108,9 +113,11 @@ class ModalFileManagerView extends SelectListView
     @open @currentDir
 
   rightArrow: (item) ->
-    @open item.entrie if item.entrie.isDirectory()
+    @collectItems item.entrie, true if item.entrie.isDirectory()
+    #@open item.entrie if item.entrie.isDirectory()
   leftArrow: (item) ->
-    @open @currentDir.getParent()
+    @collectItems @currentDir.getParent(), true
+    #@open @currentDir.getParent()
   confirmed: (item) =>
     if item.entrie.isDirectory()
       if @comfirmFilter.dir instanceof RegExp

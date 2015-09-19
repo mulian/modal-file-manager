@@ -1,3 +1,6 @@
+## 0.1.6
+* fix: symlink error on show sub-directory
+
 ## 0.1.5 - include Sub-Directorys
 * fix: right arrow key on files produce an error
 * include files from sub-directory (config able: deep)
