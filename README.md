@@ -24,12 +24,16 @@ A file browser in modal Panel.
 * Default Open Path
   * This works if Open First Project Path is unselected or are not in any project
   * Choose your own static default path
-  * (the path will only reset on comfirm a file/dir in Modal File Manager not on show/hide)
 * Open With
   * atom: will open every comfirmed (enter) file/folder with atom
   * open: will open with terminal statement `open <pathToFileOrDir>`
 * Open Directory
   * if you also want to comfirm Directory
+* Deep
+  * Collect the (default:) first(1) sub-directorys in modal Panel.
+  * Turn it of with value 0
+
+The path will only **reset** on comfirm a file/dir in Modal File Manager not on show/hide.
 
 ## Use the Modal File Manager as lib
 You could use this File Manager as lib for Packages like

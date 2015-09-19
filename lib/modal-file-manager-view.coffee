@@ -14,6 +14,8 @@ class ModalFileManagerView extends SelectListView
     dir: true
     file: true
 
+  deep: 0
+
   initialize: (@attr) ->
     super
     @panel ?= atom.workspace.addModalPanel(item: this)
@@ -46,6 +48,12 @@ class ModalFileManagerView extends SelectListView
   viewForItem: (item) -> #class: status-ignored if . icon-file-text
     iconClass = ""
     bindArrow = ""
+    showSubFolderFromFirst= ""
+    if item.subFromFirst?
+      if item.subFromFirst.length>35
+        item.subFromFirst = item.subFromFirst.substring 0,35
+        item.subFromFirst = "#{item.subFromFirst}..."
+      showSubFolderFromFirst= "<div class='pull-right'><kbd class='subFolder'>#{item.subFromFirst}</kbd></div>"
     if item.entrie.isDirectory()
       iconClass = "icon-file-directory"
       bindArrow = "<div class='pull-right'><kbd class='key-binding'>→</kbd></div>"
@@ -55,35 +63,52 @@ class ModalFileManagerView extends SelectListView
       <span class='#{iconClass}
          modal-file-manager-item-title'>
         #{item.title}
-      </span> #{bindArrow}
+      </span> #{showSubFolderFromFirst}#{bindArrow}
     </li>"
+
+  currentPath: null
 
   open: (@currentDir,callback) ->
     @callback=callback if callback?
     @currentDir = new Directory @currentDir if @currentDir not instanceof Directory #==string
-    @currentDir.getEntries (error,entries) =>
-      if entries?
-        @subtitle.text @currentDir.getPath()
-        items = []
-        for entrie in entries
-          #if @showAllSubDir and entrie.isDirectory() #TODO: inklude all sub dir
-          if @showHidden or not (entrie.getBaseName().charAt(0)=='.')
-            items.push
-              'title': entrie.getBaseName()
-              'entrie': entrie
-        @setItems items
+    @currentPath = @currentDir.getRealPathSync()
+    @collectItems @currentDir, @deep, true
 
-        @setFilterQuery ""
-        if not @panel.isVisible()
-          @panel.show()
-        @focusFilterEditor()
+    @subtitle.text @currentDir.getRealPathSync()
+    @setFilterQuery ""
+    if not @panel.isVisible()
+      @panel.show()
+    @focusFilterEditor()
+
+  #async collectItems
+  #it updates the items on every async callback
+  collectItems: (dir,deep,start=false) ->
+    @items = [] if start
+    dir.getEntries (error,entries) =>
+      atom.notification.addError "error on collectItems" if error
+      if entries?
+        #console.log "deep #{deep}: #{dir.getRealPathSync()}"
+        for entrie in entries
+          #show/hide hidden files AND on start show directory, if not start then no directorys
+          if (@showHidden or not (entrie.getBaseName().charAt(0)=='.'))
+            @collectItems entrie, (parseInt(deep)-1) if parseInt(deep)>0 and entrie.isDirectory()
+            if start or not entrie.isDirectory()
+              #console.log dir.getRealPath().substring @currentPath.length,entrie.relativize().length
+              item =
+                title: entrie.getBaseName()
+                entrie: entrie
+              if not start
+                item.subFromFirst= dir.getRealPathSync().substring @currentPath.length,dir.getRealPathSync().lenght
+              @items.push item
+        @setItems @items
       else atom.notifications.addInfo "#{@currentDir.getBaseName()}: Permission denied"
+
 
   reOpen: ->
     @open @currentDir
 
   rightArrow: (item) ->
-    @open item.entrie
+    @open item.entrie if item.entrie.isDirectory()
   leftArrow: (item) ->
     @open @currentDir.getParent()
   confirmed: (item) =>

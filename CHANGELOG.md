@@ -1,3 +1,7 @@
+## 0.1.5 - include Sub-Directorys
+* fix: right arrow key on files produce an error
+* include files from sub-directory (config able: deep)
+
 ## 0.1.4 - issue fix
 * if you are not in any project, it will now use the Default Open Path from settings
 

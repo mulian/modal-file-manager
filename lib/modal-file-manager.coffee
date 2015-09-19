@@ -22,6 +22,12 @@ module.exports = ModalFileManager =
       enum: ['atom','open']
       default: 'atom'
       description: 'Open selected file with (open works only with mac os)...'
+    deep:
+      type: 'integer'
+      default: 1
+      minimum: 0
+      maximum: 3
+      description: "Collect the (default:) first(1) sub-directorys."
 
   #to get View by using as lib
   ModalFileManagerView: require './modal-file-manager-view'
@@ -50,6 +56,7 @@ module.exports = ModalFileManager =
       if not atom.config.get("#{packageName}.openFirstProjectPath") or not (typeof(dir) == 'string') or (dir.length==0)
         dir = atom.config.get("#{packageName}.defaultOpenPath")
       @modalFileManagerView.comfirmFilter.dir = atom.config.get("#{packageName}.openDirectory")
+      @modalFileManagerView.deep = atom.config.get("#{packageName}.deep")
       @modalFileManagerView.open dir, (file) => #current Project dir is?
         #console.log "path: #{file.getBaseName()}"
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
