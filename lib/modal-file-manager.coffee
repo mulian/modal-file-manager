@@ -1,8 +1,28 @@
 #ModalFileManagerView =
 {CompositeDisposable} = require 'atom'
 {BufferedProcess} = require 'atom'
+packageName = require('../package.json').name
 
 module.exports = ModalFileManager =
+  config:
+    openDirectory:
+      type: 'boolean'
+      default: false
+      description: 'Also open Directory'
+    openFirstProjectPath:
+      type: 'boolean'
+      default: true
+      description: 'Open your first opened Project Path'
+    defaultOpenPath:
+      type: 'string'
+      default: 'C:/'
+      description: 'When open FileManager if Open First Project Path is false'
+    openWith:
+      type: 'string'
+      enum: ['atom','open']
+      default: 'atom'
+      description: 'Open selected file with (open works only with mac os)...'
+
   #to get View by using as lib
   ModalFileManagerView: require './modal-file-manager-view'
 
@@ -25,12 +45,18 @@ module.exports = ModalFileManager =
   runFileManager: ->
     if not @isAlreadyOpen
       #@modalFileManagerView.comfirmFilter.dir = /.app$/
-      @modalFileManagerView.open atom.project.getPaths()[0], (file) => #current Project dir is?
+      dir = atom.project.getPaths()[0]
+      if not atom.config.get("#{packageName}.openFirstProjectPath")
+        dir = atom.config.get("#{packageName}.defaultOpenPath")
+      @modalFileManagerView.comfirmFilter.dir = atom.config.get("#{packageName}.openDirectory")
+      @modalFileManagerView.open dir, (file) => #current Project dir is?
         console.log "path: #{file.getBaseName()}"
-        if process.platform == "darwin" #mac
+        if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
           @run "open #{file.getRealPathSync()}"
         else
-          atom.notifications.addInfo "There is no right open definition for your OS."
+          #run with atom
+          atom.open
+            pathsToOpen: [file.getRealPathSync()]
         @isAlreadyOpen=false
       @isAlreadyOpen=true
     else if @isAlreadyOpen and @modalFileManagerView.panel.isVisible()

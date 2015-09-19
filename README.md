@@ -17,6 +17,20 @@ A file browser in modal Panel.
  * arrow key → to show sub directory from selected directory
  * press enter to start the file (works only on mac right now)
  * type character to search the current folder
+ * comfirm = press enter
+
+## Settings
+* Open First Project Path
+  * If this is checked, your first Project Path will open on Open Modal File Manager
+* Default Open Path
+  * This works only if Open First Project Path is unselected
+  * Choose your own static default path
+  * (the path will only reset on comfirm a file/dir in Modal File Manager not on show/hide)
+* Open With
+  * atom: will open every comfirmed (enter) file/folder with atom
+  * open: will open with terminal statemenet `open <pathToFileOrDir>`
+* Open Directory
+  * if you also want to comfirm Directory
 
 ## As lib
 You could use this File Manager as lib for Packages like

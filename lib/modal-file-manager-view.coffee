@@ -26,7 +26,7 @@ class ModalFileManagerView extends SelectListView
     @sub = $("<h2 />",{id:'modal-file-manager-subtitle'})
     @subtitle = $("<h2 />",{text: 'none'})
     @subBefore = $("<div class='pull-right'><kbd class='key-binding'>←</kbd></div>")
-    @title = $('<h1 />',{text: 'File Manager: ',id:'modal-file-manager-title'})
+    @title = $('<h1 />',{text: 'File Manager',id:'modal-file-manager-title'})
     @sub.append @subBefore
     @sub.append @subtitle
     @baseElement.prepend @sub

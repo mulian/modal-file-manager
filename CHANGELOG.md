@@ -1,3 +1,7 @@
+## 0.1.3 - raise userbility
+* change title
+* Add Settings
+
 ## 0.1.2 - add
 * Add Comfirmation Filter
 
