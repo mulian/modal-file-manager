@@ -1,3 +1,6 @@
+## 0.1.4 - issue fix
+* if you are not in any project, it will now use the Default Open Path from settings
+
 ## 0.1.3 - raise userbility
 * change title
 * Add Settings

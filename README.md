@@ -22,7 +22,7 @@ A file browser in modal Panel.
 * Open First Project Path
   * If this is checked, your first Project Path will open on Open Modal File Manager
 * Default Open Path
-  * This works only if Open First Project Path is unselected
+  * This works if Open First Project Path is unselected or are not in any project
   * Choose your own static default path
   * (the path will only reset on comfirm a file/dir in Modal File Manager not on show/hide)
 * Open With

@@ -46,7 +46,8 @@ module.exports = ModalFileManager =
     if not @isAlreadyOpen
       #@modalFileManagerView.comfirmFilter.dir = /.app$/
       dir = atom.project.getPaths()[0]
-      if not atom.config.get("#{packageName}.openFirstProjectPath")
+      console.log "BLAAA" if !(typeof(dir) == 'string')
+      if not atom.config.get("#{packageName}.openFirstProjectPath") or not (typeof(dir) == 'string') or (dir.length==0)
         dir = atom.config.get("#{packageName}.defaultOpenPath")
       @modalFileManagerView.comfirmFilter.dir = atom.config.get("#{packageName}.openDirectory")
       @modalFileManagerView.open dir, (file) => #current Project dir is?
