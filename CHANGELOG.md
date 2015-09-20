@@ -1,5 +1,10 @@
-## 0.1.6
+## 0.1.7 (next version!)
 * fix: symlink error on show sub-directory
+* Add test cases
+
+## 0.1.6 prettify code
+* prettify
+* rais up lib userbility
 
 ## 0.1.5 - include Sub-Directorys
 * fix: right arrow key on files produce an error
