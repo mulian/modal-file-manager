@@ -3,18 +3,32 @@
 
 module.exports =
 class ModalFileManagerView extends SelectListView
-  #constructor: (serializedState) ->
   callback: undefined
-  showHidden:false
-  #selectNoDir:false
-  showAllSubDir: true #not working right now
 
-  comfirmFilter:
+  constructor: (options) ->
+    super
+    @setOptions options
+
+
+  #Set Options for example:
+  # {}=
+  #   deep: 1
+  #   showHidden: false
+  #   serializedState: state
+  #   callback: (file) ->
+  #     console.log file.getBaseName()
+  #   comfirmFilter:
+  #     dir: /.app$/
+  #     file: false
+  #   dir: '/'
+  setOptions: (options) ->
+    @deep = options?.deep ? 0
+    @showHidden = options?.showHidden ? false
+    @serializedState = options?.serializedState
+    @callback = options?.callback
     #dir,file could be an regular Expression only files how pass will comfirmed
-    dir: true
-    file: true
-
-  deep: 0
+    @filterDir = options?.filterDir ? true
+    @filterFile = options?.filterFile ? true
 
   initialize: (@attr) ->
     super
@@ -69,8 +83,12 @@ class ModalFileManagerView extends SelectListView
   currentPath: null
 
   #open Directory and show file Manager
-  open: (@currentDir,callback) ->
+  #open with (dir, callback) or like constructor (one parameter)
+  #dir could be string or an Directory object
+  open: (dir,callback) ->
     @callback=callback if callback?
+    @currentDir=dir if dir?
+    @setOptions dir if dir instanceof Object
     @currentDir = new Directory @currentDir if @currentDir not instanceof Directory #==string
 
     @collectItems @currentDir, true
@@ -120,14 +138,14 @@ class ModalFileManagerView extends SelectListView
     #@open @currentDir.getParent()
   confirmed: (item) =>
     if item.entrie.isDirectory()
-      if @comfirmFilter.dir instanceof RegExp
-        @callBackNow item.entrie if @comfirmFilter.dir.test item.entrie.getBaseName()
-      else if @comfirmFilter.dir
+      if @filterDir instanceof RegExp
+        @callBackNow item.entrie if @filterDir.test item.entrie.getBaseName()
+      else if @filterDir
         @callBackNow item.entrie
     else
-      if @comfirmFilter.file instanceof RegExp
-        @callBackNow item.entrie if @comfirmFilter.file.test item.entrie.getBaseName()
-      else if @comfirmFilter.file
+      if @filterFile instanceof RegExp
+        @callBackNow item.entrie if @filterFile.test item.entrie.getBaseName()
+      else if @filterFile
         @callBackNow item.entrie
   callBackNow: (item) ->
     @callback item

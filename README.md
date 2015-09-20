@@ -2,7 +2,7 @@
 
 A file browser in modal Panel.
 
-![A screenshot of your package](https://raw.githubusercontent.com/mulian/modal-file-manager/master/preview.png)
+![A screenshot of modal file manager v0.1.0](https://raw.githubusercontent.com/mulian/modal-file-manager/master/preview.png)
 
 ## Install & Open
 1. Install
@@ -33,45 +33,48 @@ A file browser in modal Panel.
   * Collect the (default:) first(1) sub-directorys in modal Panel.
   * Turn it of with value 0
 
-The path will only **reset** on comfirm a file/dir in Modal File Manager not on show/hide.
-
 ## Use the Modal File Manager as lib
 You could use this File Manager as lib for Packages like
-```javascript
+```coffeescript
   atom.pickDirectory (path) ->
     console.log path
 ```
 
 ### Use Steps
 1. add following to your package.json in dependencies:
-```javascript
+```coffeescript
     "modal-file-manager": "git+https://github.com/mulian/modal-file-manager.git"
 ```
 2. in your Project root: `npm update`
 3. Use the ModalFileManagerView:
-```javascript
+```coffeescript
 {ModalFileManagerView} = require 'modal-file-manager'
-modalFileManagerView = new ModalFileManagerView()
+modalFileManagerView = new ModalFileManagerView
+  deep: 0 #see Settings
+  filterDir : false
+  filterFile : true
+  showHidden : false
+
+#change options:
+modalFileManagerView.setOptions
+  deep: 1
+
 modalFileManagerView.open "/", (file) ->
   console.log "selected file-/folder name: #{file.getBaseName()}"
 ```
 
-### Comfirmation Filter
-* modalFileManagerView.comfirmFilter.dir is for Directory
-* modalFileManagerView.comfirmFilter.file is for File
-same usage
-
-#### No confirmation on Directory, but file
-```javascript
-@modalFileManagerView.comfirmFilter
-  dir = false
-  file = true
+#### Comfirmation Filter example
+```coffeescript
+@modalFileManagerView.setOptions
+  filterDir = false
+  filterFile = true
 ```
 
 #### Regular Expression
 for example:
-```javascript
-@modalFileManagerView.comfirmFilter.dir = /.app$/
+```coffeescript
+@modalFileManagerView.setOptions
+  filterDir = /.app$/
 ```
 Restrict the comfirmation to comfirm only Folder with Foldername.app (usefull for mac os apps)
 (same with .file)

@@ -12,7 +12,7 @@ module.exports = ModalFileManager =
     openFirstProjectPath:
       type: 'boolean'
       default: true
-      description: 'Open your first opened Project Path'
+      description: 'Open your first Project Path'
     defaultOpenPath:
       type: 'string'
       default: 'C:/'
@@ -27,7 +27,7 @@ module.exports = ModalFileManager =
       default: 1
       minimum: 0
       maximum: 3
-      description: "Collect the (default:) first(1) sub-directorys."
+      description: "Collect the (default:) first(1) sub-directorys (0-3)."
 
   #to get View by using as lib
   ModalFileManagerView: require './modal-file-manager-view'
@@ -35,42 +35,47 @@ module.exports = ModalFileManager =
   modalFileManagerView: null
   modalPanel: null
   subscriptions: null
-  isAlreadyOpen: false
 
   activate: (state) ->
-    @modalFileManagerView = new @ModalFileManagerView()
-    @modalFileManagerView.setSate state.modalFileManagerViewState
+    @modalFileManagerView = new @ModalFileManagerView {}=
+      deep: atom.config.get "#{packageName}.deep"
+      comfirmFilter:
+        dir: atom.config.get "#{packageName}.openDirectory"
+      state: state.modalFileManagerViewState
     #@modalPanel = atom.workspace.addModalPanel(item: @modalFileManagerView, visible: false)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:show': => @runFileManager()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:show': => @toggleFileManager()
+    @regEvents()
 
-  runFileManager: ->
-    if not @isAlreadyOpen
-      #@modalFileManagerView.comfirmFilter.dir = /.app$/
-      dir = atom.project.getPaths()[0]
-      console.log "BLAAA" if !(typeof(dir) == 'string')
-      if not atom.config.get("#{packageName}.openFirstProjectPath") or not (typeof(dir) == 'string') or (dir.length==0)
-        dir = atom.config.get("#{packageName}.defaultOpenPath")
-      @modalFileManagerView.comfirmFilter.dir = atom.config.get("#{packageName}.openDirectory")
-      @modalFileManagerView.deep = atom.config.get("#{packageName}.deep")
-      @modalFileManagerView.open dir, (file) => #current Project dir is?
-        #console.log "path: #{file.getBaseName()}"
+  regEvents: ->
+    atom.config.observe "#{packageName}.openDirectory", (newValue) =>
+      @modalFileManagerView.setOptions {filterDir: newValue}
+    atom.config.observe "#{packageName}.deep", (newValue) =>
+      @modalFileManagerView.setOptions {deep:newValue}
+
+  getDir: ->
+    if not atom.config.get("#{packageName}.openFirstProjectPath")
+      return atom.config.get("#{packageName}.defaultOpenPath")
+    else if (atom.project.getPaths()?.length > 0) and atom.config.get("#{packageName}.openFirstProjectPath")
+      return atom.project.getPaths()[0]
+    else if process.platform == 'win32'
+      return "C:/"
+    else return "/"
+
+  toggleFileManager: ->
+    if @modalFileManagerView.panel.isVisible()
+      @modalFileManagerView.panel.hide()
+    else
+      @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
           @run "open #{file.getRealPathSync()}"
         else
-          #run with atom
-          atom.open
+          atom.open #run with atom
             pathsToOpen: [file.getRealPathSync()]
-        @isAlreadyOpen=false
-      @isAlreadyOpen=true
-    else if @isAlreadyOpen and @modalFileManagerView.panel.isVisible()
-      @modalFileManagerView.panel.hide()
-    else @modalFileManagerView.reOpen()
-
 
   strToCmd: (str) ->
     res = str.split " "
