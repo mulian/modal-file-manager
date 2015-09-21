@@ -77,7 +77,7 @@ for example:
   filterDir = /.app$/
 ```
 Restrict the comfirmation to comfirm only Folder with Foldername.app (usefull for mac os apps)
-(same with .file)
+(same with .file) 
 
 #### Other
 Please let me know, if you use this Project as lib.
