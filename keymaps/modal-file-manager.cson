@@ -7,7 +7,8 @@
 
 # For more detailed documentation see #ccc
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
+#.platform-linux
+'.platform-win32 atom-workspace':
+  'alt-shift-m': 'modal-file-manager:toggle'
 '.platform-darwin atom-workspace':
   'shift-cmd-m': 'modal-file-manager:toggle'
-'.platform-win32 .platform-linux atom-workspace':
-  'shift-ctrl-m': 'modal-file-manager:toggle'
