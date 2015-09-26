@@ -1,7 +1,8 @@
-## 0.1.8 (next version!)
+## 0.2.0 (next version!)
 * Cleanup!
 * fix: symlink error on show sub-directory
 * add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
+* Set deep Search default to 0 (off)
 
 ## 0.1.7 Test test test
 * Create first test cases for
