@@ -11,7 +11,7 @@
     "jump"
   ],
   "activationCommands": {
-    "atom-workspace": "modal-file-manager:show"
+    "atom-workspace": "modal-file-manager:toggle"
   },
   "repository": "https://github.com/mulian/modal-file-manager.git",
   "license": "MIT",

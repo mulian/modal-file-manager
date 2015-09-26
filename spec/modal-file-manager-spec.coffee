@@ -12,7 +12,7 @@ describe "ModalFileManager", ->
     workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('modal-file-manager')
 
-  describe "when the modal-file-manager:show event is triggered", ->
+  describe "when the modal-file-manager:toggle event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
@@ -20,7 +20,7 @@ describe "ModalFileManager", ->
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
+      atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
 
       console.log atom.project.getPaths()[0]
 
@@ -35,7 +35,7 @@ describe "ModalFileManager", ->
 
         modalFileManagerPanel = atom.workspace.panelForItem(modalFileManagerElement)
         expect(modalFileManagerPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
+        atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
         expect(modalFileManagerPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
@@ -51,7 +51,7 @@ describe "ModalFileManager", ->
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
+      atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
 
       waitsForPromise ->
         activationPromise
@@ -62,5 +62,5 @@ describe "ModalFileManager", ->
 
         expect(modalFileManagerElement).toBeVisible()
 
-        atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
+        atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
         expect(modalFileManagerElement).not.toBeVisible()

@@ -9,26 +9,27 @@ A file browser in modal Panel.
   * Atom: Preferences -> install -> search "modal file manager" -> install
   * Terminal: `apm install modal-file-manager`
 2. Open
-  * Type: [⌘+⇧+M]
+  * Press: Mac [CMD+SHIFT+M] or Win [CTRL-SHIFT-M]
   * Menu Bar: Packages -> Modal File Manager -> Show
+  * Press: [CMD/CTRL-SHIFT-P] -> type 'modal file manager toggle' -> comfirm
 
 ## Navigate
- * arrow key ← to show parent directory
- * arrow key → to show sub directory from selected directory
+ * arrow key ← (LEFT ARROW) to show parent directory
+ * arrow key → (RIGHT ARROW) to show sub directory from selected directory
  * type character to search the current folder
  * comfirm = press enter
 
 ## Settings
 * Open First Project Path
-  * If this is checked, your first Project Path will open on Open Modal File Manager
+  * If is checked, your first Project Path will open on Open Modal File Manager
 * Default Open Path
-  * This works if Open First Project Path is unselected or are not in any project
-  * Choose your own static default path
+  * If Open First Project Path is unchecked or you are not in any project
+  * Choose your static default path
 * Open With
   * atom: will open every comfirmed (enter) file/folder with atom
-  * open: will open with terminal statement `open <pathToFileOrDir>`
+  * open: will open with terminal statement `open <pathToFileOrDir>` (works only with mac)
 * Open Directory
-  * if you also want to comfirm Directory
+  * if you also want to comfirm Directorys
 * Deep
   * Collect the (default:) first(1) sub-directorys in modal Panel.
   * Turn it of with value 0
@@ -77,7 +78,7 @@ for example:
   filterDir = /.app$/
 ```
 Restrict the comfirmation to comfirm only Folder with Foldername.app (usefull for mac os apps)
-(same with .file) 
+(same with .file)
 
 #### Other
 Please let me know, if you use this Project as lib.

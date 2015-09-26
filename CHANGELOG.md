@@ -9,6 +9,8 @@
   * Use Emitter for left-right-arrow
   * Other..
 * Select last used folder after push leftArrow (DirUp)
+* Change command name from show to toggle
+* Change key for windows: ctrl-shift-m
 
 ## 0.1.6 prettify code
 * prettify

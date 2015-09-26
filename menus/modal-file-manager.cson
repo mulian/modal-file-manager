@@ -13,8 +13,8 @@
       'label': 'Modal File Manager'
       'submenu': [
         {
-          'label': 'Show'
-          'command': 'modal-file-manager:show'
+          'label': 'Toggle'
+          'command': 'modal-file-manager:toggle'
         }
       ]
     ]

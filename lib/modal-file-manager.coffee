@@ -5,6 +5,12 @@ packageName = require('../package.json').name
 
 module.exports = ModalFileManager =
   config:
+    # triggerKey:
+    #   title: 'Trigger key'
+    #   description: 'Decide what trigger key should open the Color Picker. `CMD-SHIFT-{TRIGGER_KEY}` and `CTRL-ALT-{TRIGGER_KEY}`. Requires a restart.'
+    #   type: 'string'
+    #   enum: [ 'M', 'E', 'H', 'K']
+    #   default: 'M'
     openDirectory:
       type: 'boolean'
       default: false
@@ -48,7 +54,7 @@ module.exports = ModalFileManager =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:show': => @toggleFileManager()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:toggle': => @toggleFileManager()
     @regEvents()
 
   regEvents: ->
@@ -67,6 +73,7 @@ module.exports = ModalFileManager =
     else return "/"
 
   toggleFileManager: ->
+    console.log "toggle"
     if @modalFileManagerView.panel.isVisible()
       @modalFileManagerView.panel.hide()
     else

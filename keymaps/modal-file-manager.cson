@@ -5,7 +5,9 @@
 # Below is a basic keybinding which registers on all platforms by applying to
 # the root workspace element.
 
-# For more detailed documentation see
+# For more detailed documentation see #ccc
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
-'atom-workspace':
-  'shift-cmd-m': 'modal-file-manager:show'
+'.platform-darwin atom-workspace':
+  'shift-cmd-m': 'modal-file-manager:toggle'
+'.platform-win32 .platform-linux atom-workspace':
+  'shift-ctrl-m': 'modal-file-manager:toggle'
