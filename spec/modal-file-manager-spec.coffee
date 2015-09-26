@@ -12,7 +12,7 @@ describe "ModalFileManager", ->
     workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('modal-file-manager')
 
-  describe "when the modal-file-manager:toggle event is triggered", ->
+  describe "when the modal-file-manager:show event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
@@ -20,7 +20,9 @@ describe "ModalFileManager", ->
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
+      atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
+
+      console.log atom.project.getPaths()[0]
 
       waitsForPromise ->
         activationPromise
@@ -33,7 +35,7 @@ describe "ModalFileManager", ->
 
         modalFileManagerPanel = atom.workspace.panelForItem(modalFileManagerElement)
         expect(modalFileManagerPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
+        atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
         expect(modalFileManagerPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
@@ -49,7 +51,7 @@ describe "ModalFileManager", ->
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
+      atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
 
       waitsForPromise ->
         activationPromise
@@ -57,6 +59,8 @@ describe "ModalFileManager", ->
       runs ->
         # Now we can test for view visibility
         modalFileManagerElement = workspaceElement.querySelector('.modal-file-manager')
+
         expect(modalFileManagerElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'modal-file-manager:toggle'
+
+        atom.commands.dispatch workspaceElement, 'modal-file-manager:show'
         expect(modalFileManagerElement).not.toBeVisible()

@@ -1,6 +1,14 @@
-## 0.1.7 (next version!)
+## 0.1.8 (next version!)
+* Cleanup!
 * fix: symlink error on show sub-directory
-* Add test cases
+* add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
+
+## 0.1.7 Test test test
+* Create first test cases for "left/right/up/down Item Moves"
+* Better Selfdestruction ;)
+  * Use Emitter for left-right-arrow
+  * Other..
+* Select last used folder after push leftArrow (DirUp)
 
 ## 0.1.6 prettify code
 * prettify

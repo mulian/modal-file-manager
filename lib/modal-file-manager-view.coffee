@@ -1,16 +1,16 @@
 {$,SelectListView} = require 'atom-space-pen-views'
-{Directory,File} = require 'atom'
+{Directory,File,Emitter} = require 'atom'
+
+fuzzyFilter=null
 
 module.exports =
 class ModalFileManagerView extends SelectListView
   callback: undefined
+  currentPath: null
 
   constructor: (options) ->
     super
     @setOptions options
-
-  schedulePopulateList: ->
-    #do nothing!
 
   #Set Options for example:
   # {}=
@@ -23,22 +23,31 @@ class ModalFileManagerView extends SelectListView
   #     dir: /.app$/
   #     file: false
   #   dir: '/'
-  setOptions: (options) ->
-    @deep = options?.deep ? 0
-    @showHidden = options?.showHidden ? false
-    @serializedState = options?.serializedState
-    @callback = options?.callback
+  setOptions: (option) ->
+    @deep = option?.deep ? 0
+    @showHidden = option?.showHidden ? false
+    @serializedState = option?.serializedState
+    @callback = option?.callback
     #dir,file could be an regular Expression only files how pass will comfirmed
-    @filterDir = options?.filterDir ? true
-    @filterFile = options?.filterFile ? true
+    @filterDir = filterDir ? true
+    @filterFile = filterFile ? true
 
   initialize: (@attr) ->
     super
-    @panel ?= atom.workspace.addModalPanel(item: this)
-    @baseElement = $(@element)
+    @initEmitter()
+    @panel ?= atom.workspace.addModalPanel(item: @element)
 
+    @addClass "modal-file-manager" #for test
+    @panel.hide()
     @initTitle()
     @initKeyFunctions()
+    @emitter.on "did-finished-collect", =>
+      # @selectItemViewLastWatched()
+      # console.log "finisehd:"
+      # console.log @getSelectedItem()
+      lastWatchedDir = @list.find('li.lastWatchedDirectory')
+      # console.log lastWatchedDir.length
+      @selectItemView lastWatchedDir
 
   initTitle: ->
     @sub = $("<h2 />",{id:'modal-file-manager-subtitle'})
@@ -47,21 +56,28 @@ class ModalFileManagerView extends SelectListView
     @title = $('<h1 />',{text: 'File Manager',id:'modal-file-manager-title'})
     @sub.append @subBefore
     @sub.append @subtitle
-    @baseElement.prepend @sub
-    @baseElement.prepend @title
+    @prepend @sub
+    @prepend @title
+
+  initEmitter: ->
+    @emitter = new Emitter
+    @keydown (event) =>
+      switch event.keyCode
+        when 37 then @emitter.emit 'did-press-left-arrow', @getSelectedItem(), event
+        when 39 then @emitter.emit 'did-press-right-arrow', @getSelectedItem(), event
 
   initKeyFunctions: ->
-    @baseElement.keydown (event) =>
-      # console.log "key: #{event.keyCode}"
-      # for el in @list.children()
-      #   console.log el
-      switch event.keyCode
-        when 37 then @leftArrow @getSelectedItem() if @leftArrow?
-        when 39 then @rightArrow @getSelectedItem() if @rightArrow?
+    #currently there is no move-right or left event from atom maby later?
+    @emitter.on 'did-press-right-arrow', @rightArrow
+    @emitter.on 'did-press-left-arrow', @leftArrow
+
+    #@rightArrow() if @rightArrow?
+    #@leftArrow() if @leftArrow?
 
   getFilterKey: () ->
     "title"
   viewForItem: (item) -> #class: status-ignored if . icon-file-text
+    #TODO: rewrite
     iconClass = ""
     bindArrow = ""
     showSubFolderFromFirst= ""
@@ -71,15 +87,15 @@ class ModalFileManagerView extends SelectListView
         item.subFromFirst = item.subFromFirst.substring 0,35
         item.subFromFirst = "#{item.subFromFirst}..."
       showSubFolderFromFirst= "<div class='pull-right'><kbd class='subFolder'>#{item.subFromFirst}</kbd></div>"
-    if not item.entrie?
-      console.log item
+    #if not item.entrie?
+      #console.log item
     if item.entrie.isDirectory()
       iconClass = "icon-file-directory"
       bindArrow = "<div class='pull-right'><kbd class='key-binding'>→</kbd></div>"
     else
       iconClass = "icon icon-file-text"
     if item.entrie.isDirectory() and @lastWatchedDirectory?.getRealPathSync() ==item.entrie.getRealPathSync()
-      console.log "set lastWatchedClass: #{item.title}"
+      #console.log "set lastWatchedClass: #{item.title}"
       itemClass= "lastWatchedDirectory"
       @lastWatchedDirectory=undefined
     "<li class='modal-file-manager-item directory #{itemClass}' >
@@ -88,8 +104,6 @@ class ModalFileManagerView extends SelectListView
         #{item.title}
       </span> #{showSubFolderFromFirst}#{bindArrow}
     </li>"
-
-  currentPath: null
 
   #open Directory and show file Manager
   #open with (dir, callback) or like constructor (one parameter)
@@ -106,8 +120,7 @@ class ModalFileManagerView extends SelectListView
       @panel.show()
     @focusFilterEditor()
 
-  #async collectItems
-  #it updates the items on every async callback
+  #it updates the items on every async callback, with updateList
   collectItems: (dir,start=false,deep=@deep) ->
     if start
       @collectionItems = []
@@ -116,6 +129,7 @@ class ModalFileManagerView extends SelectListView
       #Set suptitle text to current Path Url and reset Filter Query
       @subtitle.text @currentPath
       @setFilterQuery ""
+      @subProcessCound = 0
     dir.getEntries (error,entries) =>
       atom.notifications.addError "error on collectItems" if error
       if entries?
@@ -127,6 +141,7 @@ class ModalFileManagerView extends SelectListView
             if parseInt(deep)>0 and entrie.isDirectory()
               #console.log "collect: #{entrie.getRealPathSync()}"
               @collectItems entrie,false, (parseInt(deep)-1)
+              @subProcessCound++
             if start or not entrie.isDirectory()
               #console.log dir.getRealPath().substring @currentPath.length,entrie.relativize().length
               item =
@@ -138,35 +153,51 @@ class ModalFileManagerView extends SelectListView
               localItems.push item
         if start
           @setItems localItems
+          @emitter.emit "did-finished-collect" if @subProcessCound==0
           #@selectItemViewLastWatched()
         else
           @updateList localItems
         #@update()
       else atom.notifications.addInfo "#{@currentDir.getBaseName()}: Permission denied"
 
-  selectItemView: (item) ->
-    lastWatchedItem = @list.find('li.lastWatchedDirectory')
-    if lastWatchedItem.length==1
-      item = lastWatchedItem
-    super item
+  #override super.selectItemView to define the right selectItem for this Project
+  # selectItemView: (item) ->
+  #   lastWatchedItem = @list.find('li.lastWatchedDirectory')
+  #   if item? and lastWatchedItem.length==1
+  #     item = lastWatchedItem
+  #   else if item?
+  #     item = @list.find('li:first')
+  #   super item
 
   selectItemViewLastWatched: ->
     @selectItemView $('#lastWatchedDirectory')
-    # listItem = $('#lastWatchedDirectory')
-    # if listItem.length==1
-    #
-    #   @list.find('.selected').removeClass('selected')
-    #   listItem.addClass('selected')
-  addItems: (items) ->
-    @items.push items
-    #@populateList()
-    #@setLoading()
 
-  #use copy from populateList TODO
+  updateListOnQuery: ->
+    return unless @items?
+
+    filterQuery = @getFilterQuery()
+    if filterQuery.length
+      fuzzyFilter = require('fuzzaldrin').filter
+      filteredItems = fuzzyFilter(@items, filterQuery, key: @getFilterKey())
+
+      @list.empty()
+      if filteredItems.length
+        @setError(null)
+
+        for i in [0...Math.min(filteredItems.length, @maxItems)]
+          item = filteredItems[i]
+          itemView = $(@viewForItem(item))
+          itemView.data('select-list-item', item)
+          @list.append(itemView)
+      else
+        @setError(@getEmptyMessage(@items.length, filteredItems.length))
+
+  #use copy from populateList for async update Items
   updateList: (items) ->
-    return unless items? or (@items not instanceof Array) or not @panel.isVisible() #stop if pane is invisible
+    return  unless items? or
+            (@items not instanceof Array) or
+            not @panel.isVisible() #stop if pane is invisible
 
-    #@list.empty()
     if items.length
       @setError(null)
 
@@ -179,19 +210,21 @@ class ModalFileManagerView extends SelectListView
         itemView.data('select-list-item', item)
         @list.append(itemView)
         @items.push item
-
-        #@selectItemViewLastWatched()
     else
       @setError(@getEmptyMessage(preClassItemLength, items.length))
 
 
-  reOpen: ->
-    @open @currentDir
+    criticalPart = =>
+      @subProcessCound--
+      if @subProcessCound==0
+        @emitter.emit "did-finished-collect"
+    criticalPart()
 
-  rightArrow: (item) ->
+
+  rightArrow: (item=@getSelectedItem()) =>
     @collectItems item.entrie, true if item.entrie.isDirectory()
     #@open item.entrie if item.entrie.isDirectory()
-  leftArrow: (item) ->
+  leftArrow: (item=@getSelectedItem()) =>
     @lastWatchedDirectory = @currentDir
     @collectItems @currentDir.getParent(), true
     #console.log "set "
@@ -223,10 +256,16 @@ class ModalFileManagerView extends SelectListView
 
   # Tear down any state and detach
   destroy: ->
-    console.log "destroy"
-    @destroy()
+    @emitter.dispose()
+    @detach()
 
   getElement: ->
     @element
 
   setSate: (state) ->
+
+  schedulePopulateList: -> #call from super
+    clearTimeout(@scheduleTimeout)
+    populateCallback = =>
+      @updateListOnQuery() if @isOnDom()
+    @scheduleTimeout = setTimeout(populateCallback,  @inputThrottle)

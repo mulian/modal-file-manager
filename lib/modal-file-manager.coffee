@@ -71,6 +71,7 @@ module.exports = ModalFileManager =
       @modalFileManagerView.panel.hide()
     else
       @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
+
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
           @run "open #{file.getRealPathSync()}"
         else
@@ -96,7 +97,6 @@ module.exports = ModalFileManager =
       atom.notifications.addInfo "daemon-run/-stop values not set"
 
   deactivate: ->
-    @modalPanel.destroy()
     @subscriptions.dispose()
     @modalFileManagerView.destroy()
 
