@@ -4,7 +4,9 @@
 * add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
 
 ## 0.1.7 Test test test
-* Create first test cases for "left/right/up/down Item Moves"
+* Create first test cases for
+  * left/right/up/down Item Moves
+  * show/hide ModalFileManager
 * Better Selfdestruction ;)
   * Use Emitter for left-right-arrow
   * Other..
