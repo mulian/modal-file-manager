@@ -4,6 +4,9 @@
 * add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
 * Set deep Search default to 0 (off)
 
+## 0.1.8 Don't forget Linux
+* Add Linux Shortcut
+
 ## 0.1.7 Test test test
 * Create first test cases for
   * left/right/up/down Item Moves

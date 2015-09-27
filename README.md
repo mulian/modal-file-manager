@@ -9,9 +9,9 @@ A file browser in modal Panel.
   * Atom: Preferences -> install -> search "modal file manager" -> install
   * Terminal: `apm install modal-file-manager`
 2. Open
-  * Press: Mac [CMD+SHIFT+M] or Win/Linux [ALT-SHIFT-M]
+  * Shortcut: Mac [CMD+SHIFT+M] or Win/Linux [ALT-SHIFT-M]
   * Menu Bar: Packages -> Modal File Manager -> Show
-  * Press: [CMD/CTRL-SHIFT-P] -> type 'modal file manager toggle' -> comfirm
+  * Command: [CMD/CTRL-SHIFT-P] -> type 'modal file manager toggle' -> comfirm
 
 ## Navigate
  * arrow key ← (LEFT ARROW) to show parent directory
