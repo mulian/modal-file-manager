@@ -3,6 +3,8 @@
 * fix: symlink error on show sub-directory
 * add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
 * Set deep Search default to 0 (off)
+* Fix Issue: Query returned to empty -> no refresh
+
 
 ## 0.1.8 Don't forget Linux
 * Add Linux Shortcut
