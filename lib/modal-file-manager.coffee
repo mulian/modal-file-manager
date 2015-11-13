@@ -1,7 +1,7 @@
 #ModalFileManagerView =
 {CompositeDisposable} = require 'atom'
-{BufferedProcess} = require 'atom'
-packageName = require('../package.json').name
+packageName = 'modal-file-manager'
+geb = require 'geb'
 
 module.exports = ModalFileManager =
   config:
@@ -30,7 +30,7 @@ module.exports = ModalFileManager =
       description: 'Open selected file with (open works only with mac os)...'
     deep:
       type: 'integer'
-      default: 1
+      default: 0
       minimum: 0
       maximum: 3
       description: "Collect the (default:) first(1) sub-directorys (0-3)."
@@ -38,11 +38,8 @@ module.exports = ModalFileManager =
   #to get View by using as lib
   ModalFileManagerView: require './modal-file-manager-view'
 
-  modalFileManagerView: null
-  modalPanel: null
-  subscriptions: null
-
   activate: (state) ->
+    @ebReg()
     @modalFileManagerView = new @ModalFileManagerView {}=
       deep: atom.config.get "#{packageName}.deep"
       comfirmFilter:
@@ -56,6 +53,17 @@ module.exports = ModalFileManager =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:toggle': => @toggleFileManager()
     @regEvents()
+
+  ebReg: ->
+    new geb()
+    @eb = eb.eb("modalFileManager")
+    @eb.eb {} =
+      instance:
+        domain: 'runFunction'
+        watch: ['run']
+        create: ->
+          RunFunction = require './run-function'
+          return new RunFunction()
 
   regEvents: ->
     atom.config.observe "#{packageName}.openDirectory", (newValue) =>
@@ -73,39 +81,21 @@ module.exports = ModalFileManager =
     else return "/"
 
   toggleFileManager: ->
-    console.log "toggle"
     if @modalFileManagerView.panel.isVisible()
       @modalFileManagerView.panel.hide()
     else
       @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
 
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
-          @run "open #{file.getRealPathSync()}"
+          @eb.runFunction.run "open #{file.getRealPathSync()}"
         else
           atom.open #run with atom
             pathsToOpen: [file.getRealPathSync()]
 
-  strToCmd: (str) ->
-    res = str.split " "
-    return {} =
-      command: res.shift(),
-      args: res
-  run: (cmdStr,cb) ->
-    if cmdStr?
-      cmd = @strToCmd cmdStr
-      command = cmd.command
-      args = cmd.args
-      stdout = (output) ->
-        #if output.indexOf(str) > -1
-      exit = (code) =>
-
-      process = new BufferedProcess({command, args, stdout, exit})
-    else
-      atom.notifications.addInfo "daemon-run/-stop values not set"
-
   deactivate: ->
     @subscriptions.dispose()
     @modalFileManagerView.destroy()
+    @eb.eb({remove:true})
 
   serialize: ->
     modalFileManagerViewState: @modalFileManagerView.serialize()

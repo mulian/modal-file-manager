@@ -1,15 +1,17 @@
-## 0.2.0 (next version!)
-* Cleanup!
+## 0.2.0 - (next version!)
 * fix: symlink error on show sub-directory
-* add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
-* Set deep Search default to 0 (off)
 * Fix Issue: Query returned to empty -> no refresh
 
+## 0.2.0 -
+* Cleanup!
+* remove title
+* ? add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
+* Set deep Search default to 0 (off) - for better user experience
 
-## 0.1.8 Don't forget Linux
+## 0.1.8 - Don't forget Linux
 * Add Linux Shortcut
 
-## 0.1.7 Test test test
+## 0.1.7 - Test test test
 * Create first test cases for
   * left/right/up/down Item Moves
   * show/hide ModalFileManager
@@ -20,7 +22,7 @@
 * Change command name from show to toggle
 * Change key for windows: ctrl-shift-m
 
-## 0.1.6 prettify code
+## 0.1.6 - prettify code
 * prettify
 * rais up lib userbility
 
