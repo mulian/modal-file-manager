@@ -39,7 +39,6 @@ module.exports = ModalFileManager =
   ModalFileManagerView: require './modal-file-manager-view'
 
   activate: (state) ->
-    console.log "init"
     @ebReg()
     @modalFileManagerView = new @ModalFileManagerView {}=
       deep: atom.config.get "#{packageName}.deep"
@@ -82,7 +81,6 @@ module.exports = ModalFileManager =
     else return "/"
 
   toggleFileManager: ->
-    console.log "jo"
     if @modalFileManagerView.panel.isVisible()
       @modalFileManagerView.panel.hide()
     else
