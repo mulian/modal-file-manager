@@ -1,9 +1,8 @@
 ## 0.2.0 - (next version!)
 * fix: symlink error on show sub-directory
-* Fix Issue: Query returned to empty -> no refresh
+* Cleanup!
 
 ## 0.2.0 -
-* Cleanup!
 * remove title
 * ? add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
 * Set deep Search default to 0 (off) - for better user experience
