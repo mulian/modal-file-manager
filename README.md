@@ -33,6 +33,8 @@ A file browser in modal Panel.
 * Deep
   * Collect the (default:) first(1) sub-directorys in modal Panel.
   * Turn it of with value 0
+* Show Hidden files/folders
+  * checked: show hidden unix files/folders (.-prefix)
 
 ## Use the Modal File Manager as lib
 You could use this File Manager as lib for Packages like

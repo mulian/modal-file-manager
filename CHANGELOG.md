@@ -1,6 +1,5 @@
-## 0.2.0 - (next version!)
-* fix: symlink error on show sub-directory
-* Cleanup!
+## 0.2.1 - show hidden files/folder
+* Add option for show hidden files
 
 ## 0.2.0 -
 * remove title
