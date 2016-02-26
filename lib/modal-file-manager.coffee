@@ -34,6 +34,10 @@ module.exports = ModalFileManager =
       minimum: 0
       maximum: 3
       description: "Collect the (default:) first(1) sub-directorys (0-3)."
+    showHidden:
+      type: 'boolean'
+      default: false
+      descroption: 'show hidden files/folders (unix .-prefix)'
 
   #to get View by using as lib
   ModalFileManagerView: require './modal-file-manager-view'
@@ -42,6 +46,7 @@ module.exports = ModalFileManager =
     @ebReg()
     @modalFileManagerView = new @ModalFileManagerView {}=
       deep: atom.config.get "#{packageName}.deep"
+      showHidden: atom.config.get "#{packageName}.showHidden"
       comfirmFilter:
         dir: atom.config.get "#{packageName}.openDirectory"
       state: state.modalFileManagerViewState
@@ -70,6 +75,8 @@ module.exports = ModalFileManager =
       @modalFileManagerView.setOptions {filterDir: newValue}
     atom.config.observe "#{packageName}.deep", (newValue) =>
       @modalFileManagerView.setOptions {deep:newValue}
+    atom.config.observe "#{packageName}.showHidden", (newValue) =>
+      @modalFileManagerView.setOptions {showHidden:newValue}
 
   getDir: ->
     if not atom.config.get("#{packageName}.openFirstProjectPath")
