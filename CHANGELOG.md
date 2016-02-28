@@ -1,4 +1,4 @@
-## 0.2.1 - show hidden files/folder
+## 0.3.0 - show hidden files/folder
 * Add option for show hidden files
 
 ## 0.2.0 -
