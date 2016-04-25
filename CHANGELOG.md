@@ -1,3 +1,10 @@
+## 1.0.0 - (issue #4)
+* Icons highlight (Theme)
+* .gitignore files won't show (configable; default on)
+* on going outside of Projekt (configable; default simple list)
+  - simple list of opened projects
+  - navigate in filessystem
+
 ## 0.3.0 - show hidden files/folder
 * Add option for show hidden files
 
