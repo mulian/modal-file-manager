@@ -1,5 +1,5 @@
 ## 1.0.0 - (issue #4)
-+ Icons highlight (Theme)
++ Icons (like Theme)
 + .gitignore files won't show (configable; default on)
 + on going outside of Projekt (configable; default simple list)
   * simple list of opened projects
@@ -8,6 +8,13 @@
 - remove: lib use
   * remove regular expression filter
   * remove geb (eventBus)
+- remove open defaultPath
+  * if there is no project dir -> "C:\" or "/"
+  * else first project root path
+  - remove option default open folder with
+- remove option also open directorys
+- remove open with atom/open
+
 
 ## 0.3.0 - show hidden files/folder
 * Add option for show hidden files

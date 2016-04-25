@@ -1,5 +1,5 @@
 {BufferedProcess} = require 'atom'
-
+#TODO: REMOVE
 module.exports =
 class RunFunction
   strToCmd: (str) ->
@@ -18,4 +18,4 @@ class RunFunction
 
       process = new BufferedProcess({command, args, stdout, exit})
     else
-      atom.notifications.addInfo "daemon-run/-stop values not set"
+      return -1

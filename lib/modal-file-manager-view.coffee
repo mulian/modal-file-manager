@@ -2,7 +2,7 @@
 {Directory,File,Emitter} = require 'atom'
 
 fuzzyFilter=null
-
+#TODO: Cleanup
 module.exports =
 class ModalFileManagerView extends SelectListView
   callback: undefined

@@ -3,19 +3,19 @@
 
 module.exports = ModalFileManager =
   config:
-    openDirectory:
+    openDirectory: #TODO: REMOVE
       type: 'boolean'
       default: false
       description: 'Also open Directory'
-    openFirstProjectPath:
+    openFirstProjectPath: #TODO: REMOVE
       type: 'boolean'
       default: true
       description: 'Open your first Project Path'
-    defaultOpenPath:
+    defaultOpenPath: #TODO: REMOVE
       type: 'string'
       default: 'C:/'
       description: 'When open FileManager if Open First Project Path is false'
-    openWith:
+    openWith: #TODO: REMOVE
       type: 'string'
       enum: ['atom','open']
       default: 'atom'
@@ -41,7 +41,6 @@ module.exports = ModalFileManager =
       comfirmFilter:
         dir: atom.config.get "modal-file-manager.openDirectory"
       state: state.modalFileManagerViewState
-    #@modalPanel = atom.workspace.addModalPanel(item: @modalFileManagerView, visible: false)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -50,7 +49,7 @@ module.exports = ModalFileManager =
     @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:toggle': => @toggleFileManager()
 
   regEvents: ->
-    atom.config.observe "modal-file-manager.openDirectory", (newValue) =>
+    atom.config.observe "modal-file-manager.openDirectory", (newValue) => #TODO: REMOVE!
       @modalFileManagerView.setOptions {filterDir: newValue}
     atom.config.observe "modal-file-manager.deep", (newValue) =>
       @modalFileManagerView.setOptions {deep:newValue}
@@ -58,6 +57,7 @@ module.exports = ModalFileManager =
       @modalFileManagerView.setOptions {showHidden:newValue}
 
   getDir: ->
+    #TODO: Only open Project Dir, if there is no project dir -> root dir of OS
     if not atom.config.get("modal-file-manager.openFirstProjectPath")
       return atom.config.get("modal-file-manager.defaultOpenPath")
     else if (atom.project.getPaths()?.length > 0) and atom.config.get("modal-file-manager.openFirstProjectPath")
@@ -67,13 +67,15 @@ module.exports = ModalFileManager =
     else return "/"
 
   toggleFileManager: ->
+    #TODO: should be only @modalFileManagerView.toggleView() and run with callback
     if @modalFileManagerView.panel.isVisible()
       @modalFileManagerView.panel.hide()
     else
       @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
         if process.platform == "darwin" and atom.config.get("modal-file-manager.openWith")=='open' #mac
           @runFunction = new (require './run-function') if not @runFunction?
-          @runFunction.run "open #{file.getRealPathSync()}"
+          if (@runFunction.run "open #{file.getRealPathSync()}") == -1
+            atom.notifications.addInfo "daemon-run/-stop values not set"
         else
           atom.open #run with atom
             pathsToOpen: [file.getRealPathSync()]
