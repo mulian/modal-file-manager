@@ -1,6 +1,5 @@
 #ModalFileManagerView =
 {CompositeDisposable} = require 'atom'
-packageName = 'modal-file-manager'
 
 module.exports = ModalFileManager =
   config:
@@ -37,10 +36,10 @@ module.exports = ModalFileManager =
 
   activate: (state) ->
     @modalFileManagerView = new @ModalFileManagerView {}=
-      deep: atom.config.get "#{packageName}.deep"
-      showHidden: atom.config.get "#{packageName}.showHidden"
+      deep: atom.config.get "modal-file-manager.deep"
+      showHidden: atom.config.get "modal-file-manager.showHidden"
       comfirmFilter:
-        dir: atom.config.get "#{packageName}.openDirectory"
+        dir: atom.config.get "modal-file-manager.openDirectory"
       state: state.modalFileManagerViewState
     #@modalPanel = atom.workspace.addModalPanel(item: @modalFileManagerView, visible: false)
 
@@ -51,17 +50,17 @@ module.exports = ModalFileManager =
     @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:toggle': => @toggleFileManager()
 
   regEvents: ->
-    atom.config.observe "#{packageName}.openDirectory", (newValue) =>
+    atom.config.observe "modal-file-manager.openDirectory", (newValue) =>
       @modalFileManagerView.setOptions {filterDir: newValue}
-    atom.config.observe "#{packageName}.deep", (newValue) =>
+    atom.config.observe "modal-file-manager.deep", (newValue) =>
       @modalFileManagerView.setOptions {deep:newValue}
-    atom.config.observe "#{packageName}.showHidden", (newValue) =>
+    atom.config.observe "modal-file-manager.showHidden", (newValue) =>
       @modalFileManagerView.setOptions {showHidden:newValue}
 
   getDir: ->
-    if not atom.config.get("#{packageName}.openFirstProjectPath")
-      return atom.config.get("#{packageName}.defaultOpenPath")
-    else if (atom.project.getPaths()?.length > 0) and atom.config.get("#{packageName}.openFirstProjectPath")
+    if not atom.config.get("modal-file-manager.openFirstProjectPath")
+      return atom.config.get("modal-file-manager.defaultOpenPath")
+    else if (atom.project.getPaths()?.length > 0) and atom.config.get("modal-file-manager.openFirstProjectPath")
       return atom.project.getPaths()[0]
     else if process.platform == 'win32'
       return "C:/"
@@ -72,7 +71,7 @@ module.exports = ModalFileManager =
       @modalFileManagerView.panel.hide()
     else
       @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
-        if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
+        if process.platform == "darwin" and atom.config.get("modal-file-manager.openWith")=='open' #mac
           @runFunction = new (require './run-function') if not @runFunction?
           @runFunction.run "open #{file.getRealPathSync()}"
         else
