@@ -1,16 +1,20 @@
 ## 1.0.0 - (issue #4)
-* Icons highlight (Theme)
-* .gitignore files won't show (configable; default on)
-* on going outside of Projekt (configable; default simple list)
-  - simple list of opened projects
-  - navigate in filessystem
++ Icons highlight (Theme)
++ .gitignore files won't show (configable; default on)
++ on going outside of Projekt (configable; default simple list)
+  * simple list of opened projects
+  * navigate in filessystem
+- maybe: remove dont show '.'-hide-files, use .gitignore
+- remove: lib use
+  * remove regular expression filter
+  * remove geb (eventBus)
 
 ## 0.3.0 - show hidden files/folder
 * Add option for show hidden files
 
 ## 0.2.0 -
 * remove title
-* ? add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
+* add deserilizer https://atom.io/docs/api/v1.1.0-beta.0/DeserializerManager
 * Set deep Search default to 0 (off) - for better user experience
 
 ## 0.1.8 - Don't forget Linux
@@ -28,7 +32,7 @@
 * Change key for windows: ctrl-shift-m
 
 ## 0.1.6 - prettify code
-* prettify
+* prettify code
 * rais up lib userbility
 
 ## 0.1.5 - include Sub-Directorys
