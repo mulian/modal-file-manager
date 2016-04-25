@@ -120,7 +120,7 @@ class ModalFileManagerView extends SelectListView
       @panel.show()
     @focusFilterEditor()
 
-  #it updates the items on every async callback, with updateList
+  #update the items on every async callback, with updateList
   collectItems: (dir,start=false,deep=@deep) ->
     if start
       @collectionItems = []

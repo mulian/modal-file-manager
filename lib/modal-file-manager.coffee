@@ -1,16 +1,9 @@
 #ModalFileManagerView =
 {CompositeDisposable} = require 'atom'
 packageName = 'modal-file-manager'
-geb = require 'geb'
 
 module.exports = ModalFileManager =
   config:
-    # triggerKey:
-    #   title: 'Trigger key'
-    #   description: 'Decide what trigger key should open the Color Picker. `CMD-SHIFT-{TRIGGER_KEY}` and `CTRL-ALT-{TRIGGER_KEY}`. Requires a restart.'
-    #   type: 'string'
-    #   enum: [ 'M', 'E', 'H', 'K']
-    #   default: 'M'
     openDirectory:
       type: 'boolean'
       default: false
@@ -43,7 +36,6 @@ module.exports = ModalFileManager =
   ModalFileManagerView: require './modal-file-manager-view'
 
   activate: (state) ->
-    @ebReg()
     @modalFileManagerView = new @ModalFileManagerView {}=
       deep: atom.config.get "#{packageName}.deep"
       showHidden: atom.config.get "#{packageName}.showHidden"
@@ -57,18 +49,6 @@ module.exports = ModalFileManager =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'modal-file-manager:toggle': => @toggleFileManager()
-    @regEvents()
-
-  ebReg: ->
-    new geb()
-    @eb = eb.eb("modalFileManager")
-    @eb.eb {} =
-      instance:
-        domain: 'runFunction'
-        watch: ['run']
-        create: ->
-          RunFunction = require './run-function'
-          return new RunFunction()
 
   regEvents: ->
     atom.config.observe "#{packageName}.openDirectory", (newValue) =>
@@ -92,9 +72,9 @@ module.exports = ModalFileManager =
       @modalFileManagerView.panel.hide()
     else
       @modalFileManagerView.open @getDir(), (file) => #current Project dir is?
-
         if process.platform == "darwin" and atom.config.get("#{packageName}.openWith")=='open' #mac
-          @eb.runFunction.run "open #{file.getRealPathSync()}"
+          @runFunction = new (require './run-function') if not @runFunction?
+          @runFunction.run "open #{file.getRealPathSync()}"
         else
           atom.open #run with atom
             pathsToOpen: [file.getRealPathSync()]
@@ -102,7 +82,6 @@ module.exports = ModalFileManager =
   deactivate: ->
     @subscriptions.dispose()
     @modalFileManagerView.destroy()
-    @eb.eb({remove:true})
 
   serialize: ->
     modalFileManagerViewState: @modalFileManagerView.serialize()
