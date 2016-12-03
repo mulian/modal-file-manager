@@ -4,6 +4,9 @@ A file browser in modal Panel.
 
 ![A screenshot of modal file manager v0.1.0](https://raw.githubusercontent.com/mulian/modal-file-manager/master/preview.png)
 
+# Depreciated
+Use the core-package [fuzzy-finder](https://github.com/atom/fuzzy-finder) instead.
+
 ## Install & Open
 1. Install
   * Atom: Preferences -> install -> search "modal file manager" -> install
